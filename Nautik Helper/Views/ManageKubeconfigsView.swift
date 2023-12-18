@@ -10,26 +10,43 @@ struct ManageKubeConfigsView: View {
     
     var body: some View {
         Form {
-            if !model.kubeConfigPaths.isEmpty {
-                Section("Kubeconfig Files") {
-                    List($model.kubeConfigPaths, id: \.self, editActions: [.move], selection: $selection) { kubeConfig in
+            if !model.kubeConfigs.isEmpty {
+                Section("Clusters") {
+                    List($model.kubeConfigs, id: \.path, editActions: [.move], selection: $selection) { kubeConfig in
                         VStack(alignment: .leading) {
-                            Label(kubeConfig.wrappedValue.path, systemImage: "doc")
+                            Label(kubeConfig.wrappedValue.path.path, systemImage: "doc")
                             
-                            if let error = kubeConfig.wrappedValue.kubeConfigError {
-                                Text(error)
+                            if case let .error(error) = kubeConfig.wrappedValue {
+                                Text(error.error)
                                     .font(.footnote)
                                     .foregroundColor(.red)
                             }
+                            
+                            if case let .ok(watchedKubeConfig) = kubeConfig.wrappedValue {
+                                List(watchedKubeConfig.clusters, id: \.context.name) { cluster in
+                                    HStack {
+                                        Label(cluster.context.name, image: "NautikHelm")
+                                            .foregroundColor(.primary)
+                                        
+                                        Spacer()
+                                        
+                                        Toggle("", isOn: Binding(
+                                            get: { true },
+                                            set: { _, _ in }
+                                        ))
+                                        .toggleStyle(.checkbox)
+                                    }
+                                }
+                            }
                         }
                         .padding(.vertical, 6) // Without this, the form spacing is glitchy.
-                        .opacity(kubeConfig.wrappedValue.kubeConfigError == nil ? 1 : 0.75)
+                        .opacity(kubeConfig.wrappedValue.isOK ? 1 : 0.75)
                     }
                     .contextMenu(forSelectionType: URL.self) { localSelection in
                         Button(action: {
-                            model.kubeConfigPaths = model.kubeConfigPaths.filter { !localSelection.contains($0) }
+                            model.kubeConfigs = model.kubeConfigs.filter { !localSelection.contains($0.path) }
                         }) {
-                            Text("Remove File\(localSelection.count > 1 ? "s" : "")")
+                            Text("Remove File\(localSelection.count > 1 ? "s" : "") From App")
                         }
                     }
                 }

@@ -50,11 +50,9 @@ struct MainView: View {
                 }
             }
             
-            if model.validKubeConfigPaths.count < model.kubeConfigPaths.count {
+            if !model.invalidKubeConfigs.isEmpty {
                 Section {
-                    let invalidCount = model.kubeConfigPaths.count - model.validKubeConfigPaths.count
-                    
-                    Text("\(invalidCount) of your kubeconfig files \(invalidCount > 1 ? "are" : "is") invalid. Visit the kubeconfig settings to resolve the issues.")
+                    Text("\(model.invalidKubeConfigs.count) of your kubeconfig files \(model.invalidKubeConfigs.count > 1 ? "are" : "is") invalid. Visit the kubeconfig settings to resolve the issues.")
                     
                     Button {
                         openWindow(id: "manage-kubeconfigs")
