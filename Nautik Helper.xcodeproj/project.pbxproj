@@ -17,7 +17,6 @@
 		64CE04032B1D1116009608A4 /* ManageKubeConfigsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04022B1D1116009608A4 /* ManageKubeConfigsView.swift */; };
 		64CE04052B1D18C1009608A4 /* StoredCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04042B1D18C1009608A4 /* StoredCluster.swift */; };
 		64CE04072B1E321C009608A4 /* KubeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04062B1E321C009608A4 /* KubeConfig.swift */; };
-		64CE04092B25F5D7009608A4 /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04082B25F5D7009608A4 /* Auth.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +31,6 @@
 		64CE04022B1D1116009608A4 /* ManageKubeConfigsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageKubeConfigsView.swift; sourceTree = "<group>"; };
 		64CE04042B1D18C1009608A4 /* StoredCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredCluster.swift; sourceTree = "<group>"; };
 		64CE04062B1E321C009608A4 /* KubeConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KubeConfig.swift; sourceTree = "<group>"; };
-		64CE04082B25F5D7009608A4 /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,7 +70,6 @@
 				64CE03E52B17C370009608A4 /* NautikHelper.swift */,
 				64CE04012B1D10E2009608A4 /* Views */,
 				64CE04062B1E321C009608A4 /* KubeConfig.swift */,
-				64CE04082B25F5D7009608A4 /* Auth.swift */,
 				64CE04042B1D18C1009608A4 /* StoredCluster.swift */,
 				64CE03FF2B1D05F3009608A4 /* Error.swift */,
 				64CE03E92B17C371009608A4 /* Assets.xcassets */,
@@ -170,7 +167,6 @@
 			files = (
 				64CE04002B1D05F3009608A4 /* Error.swift in Sources */,
 				64CE03E82B17C370009608A4 /* MainView.swift in Sources */,
-				64CE04092B25F5D7009608A4 /* Auth.swift in Sources */,
 				64CE04052B1D18C1009608A4 /* StoredCluster.swift in Sources */,
 				64CE04032B1D1116009608A4 /* ManageKubeConfigsView.swift in Sources */,
 				64CE04072B1E321C009608A4 /* KubeConfig.swift in Sources */,

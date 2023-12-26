@@ -136,8 +136,6 @@ struct WatchedKubeConfig {
     }
 }
 
-
-
 struct WatchError {
     let path: URL
     let error: String

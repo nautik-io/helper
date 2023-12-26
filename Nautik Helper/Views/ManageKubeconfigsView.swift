@@ -20,22 +20,30 @@ struct ManageKubeConfigsView: View {
                                 Text(error.error)
                                     .font(.footnote)
                                     .foregroundColor(.red)
+                                    .padding(.leading, 26)
                             }
                             
                             if case let .ok(watchedKubeConfig) = kubeConfig.wrappedValue {
-                                List(watchedKubeConfig.clusters, id: \.context.name) { cluster in
-                                    HStack {
-                                        Label(cluster.context.name, image: "NautikHelm")
-                                            .foregroundColor(.primary)
-                                        
-                                        Spacer()
-                                        
-                                        Toggle("", isOn: Binding(
-                                            get: { true },
-                                            set: { _, _ in }
-                                        ))
-                                        .toggleStyle(.checkbox)
+                                if !watchedKubeConfig.clusters.isEmpty {
+                                    List(watchedKubeConfig.clusters, id: \.context.name) { cluster in
+                                        HStack {
+                                            Label(cluster.context.name, image: "NautikHelm")
+                                                .foregroundColor(.primary)
+                                            
+                                            Spacer()
+                                            
+                                            Toggle("", isOn: Binding(
+                                                get: { true },
+                                                set: { _, _ in }
+                                            ))
+                                            .toggleStyle(.checkbox)
+                                        }
                                     }
+                                } else {
+                                    Text("No Clusters")
+                                        .foregroundColor(.secondary)
+                                        .padding(.leading, 14)
+                                        .padding(.top, 2)
                                 }
                             }
                         }
