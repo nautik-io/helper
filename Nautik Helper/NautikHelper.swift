@@ -1,17 +1,18 @@
 import SwiftUI
 
 @main
+@MainActor
 struct NautikHelperApp: App {
-    @State var model = KubeConfigModel()
+    @State var state = AppState()
     
     var body: some Scene {
         MenuBarExtra("Nautik Helper", image: "NautikHelm") {
-            MainView(model: model)
+            MainView(state: state)
         }
         .menuBarExtraStyle(.window)
         
-        Window("Manage Kubeconfigs", id: "manage-kubeconfigs") {
-            ManageKubeConfigsView(model: model)
+        Window("Manage Clusters", id: "manage-clusters") {
+            ManageClustersView(state: state)
         }
         .defaultSize(CGSize(width: 360, height: 400))
     }

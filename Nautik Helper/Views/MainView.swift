@@ -2,7 +2,7 @@ import SwiftUI
 import ServiceManagement
 
 struct MainView: View {
-    @Bindable var model: KubeConfigModel
+    @Bindable var state: AppState
     
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.openWindow) private var openWindow
@@ -16,7 +16,7 @@ struct MainView: View {
     var body: some View {
         VStack {
             titleBar
-            kubeconfigList
+            clusterList
         }
         .background(.thinMaterial)
         .onChange(of: launchAppAtLogin) { _, newVal in
@@ -26,38 +26,38 @@ struct MainView: View {
     
     @MainActor
     @ViewBuilder
-    var kubeconfigList: some View {
+    var clusterList: some View {
         Form {
-            if model.kubeConfigPaths.isEmpty {
+            if state.clusters.isEmpty {
                 Section {
-                    Text("No kubeconfig files added.")
+                    Text("No clusters added.")
                     
                     Button {
                         // We have to create a new window for this because
                         // attaching the file importer to the menu bar extra
                         // directly is glitchy on close of the menu bar window.
-                        openWindow(id: "manage-kubeconfigs")
+                        openWindow(id: "manage-clusters")
                     } label: {
-                        Label("Add Kubeconfig File", systemImage: "plus")
+                        Label("Add Cluster", systemImage: "plus")
                             .frame(maxWidth: .infinity)
                     }
                 }
             } else {
-                ForEach(model.kubeConfigs, id: \.path) { kubeConfig in
-                    Section(header: Text(kubeConfig.path.path).padding(.top, -12)) {
-                        Text("test")
+                Section(header: Text("Clusters")/*.padding(.top, -12)*/) {
+                    ForEach(state.clusters, id: \.id) { cluster in
+                        Text(cluster.name)
                     }
                 }
             }
             
-            if !model.invalidKubeConfigs.isEmpty {
+            if !state.invalidKubeConfigs.isEmpty {
                 Section {
-                    Text("\(model.invalidKubeConfigs.count) of your kubeconfig files \(model.invalidKubeConfigs.count > 1 ? "are" : "is") invalid. Visit the kubeconfig settings to resolve the issues.")
+                    Text("\(state.invalidKubeConfigs.count) of your kubeconfig files \(state.invalidKubeConfigs.count > 1 ? "are" : "is") invalid. Visit the kubeconfig settings to resolve the issues.")
                     
                     Button {
-                        openWindow(id: "manage-kubeconfigs")
+                        openWindow(id: "manage-clusters")
                     } label: {
-                        Label("Manage Kubeconfigs", systemImage: "gear")
+                        Label("Manage Clusters", systemImage: "gear")
                             .frame(maxWidth: .infinity)
                     }
                 }
@@ -108,8 +108,8 @@ struct MainView: View {
                 }
                 
                 Menu("Options", systemImage: "switch.2") {
-                    Button("Manage Kubeconfigs") {
-                        openWindow(id: "manage-kubeconfigs")
+                    Button("Manage Clusters") {
+                        openWindow(id: "manage-clusters")
                     }
                     Divider()
                     Button("Check for Updates") {

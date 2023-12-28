@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		64498BE72B3C35FE003D5ED5 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BE62B3C35FE003D5ED5 /* Keychain.swift */; };
 		64CE03E62B17C370009608A4 /* NautikHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03E52B17C370009608A4 /* NautikHelper.swift */; };
 		64CE03E82B17C370009608A4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03E72B17C370009608A4 /* MainView.swift */; };
 		64CE03EA2B17C371009608A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64CE03E92B17C371009608A4 /* Assets.xcassets */; };
@@ -14,23 +15,24 @@
 		64CE03F92B1CEB88009608A4 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 64CE03F82B1CEB88009608A4 /* KeychainAccess */; };
 		64CE03FC2B1CEBD0009608A4 /* SwiftkubeClient in Frameworks */ = {isa = PBXBuildFile; productRef = 64CE03FB2B1CEBD0009608A4 /* SwiftkubeClient */; };
 		64CE04002B1D05F3009608A4 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03FF2B1D05F3009608A4 /* Error.swift */; };
-		64CE04032B1D1116009608A4 /* ManageKubeConfigsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04022B1D1116009608A4 /* ManageKubeConfigsView.swift */; };
+		64CE04032B1D1116009608A4 /* ManageClustersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04022B1D1116009608A4 /* ManageClustersView.swift */; };
 		64CE04052B1D18C1009608A4 /* StoredCluster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04042B1D18C1009608A4 /* StoredCluster.swift */; };
-		64CE04072B1E321C009608A4 /* KubeConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04062B1E321C009608A4 /* KubeConfig.swift */; };
+		64CE04072B1E321C009608A4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE04062B1E321C009608A4 /* AppState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		64498BE62B3C35FE003D5ED5 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		64498BEA2B3DA5C3003D5ED5 /* NautikHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NautikHelper.entitlements; sourceTree = "<group>"; };
 		64CE03E22B17C370009608A4 /* Nautik Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nautik Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CE03E52B17C370009608A4 /* NautikHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NautikHelper.swift; sourceTree = "<group>"; };
 		64CE03E72B17C370009608A4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		64CE03E92B17C371009608A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		64CE03EE2B17C371009608A4 /* NautikHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NautikHelper.entitlements; sourceTree = "<group>"; };
 		64CE03F42B18EA05009608A4 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		64CE03F62B193A14009608A4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		64CE03FF2B1D05F3009608A4 /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
-		64CE04022B1D1116009608A4 /* ManageKubeConfigsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageKubeConfigsView.swift; sourceTree = "<group>"; };
+		64CE04022B1D1116009608A4 /* ManageClustersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageClustersView.swift; sourceTree = "<group>"; };
 		64CE04042B1D18C1009608A4 /* StoredCluster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredCluster.swift; sourceTree = "<group>"; };
-		64CE04062B1E321C009608A4 /* KubeConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KubeConfig.swift; sourceTree = "<group>"; };
+		64CE04062B1E321C009608A4 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,13 +69,14 @@
 		64CE03E42B17C370009608A4 /* Nautik Helper */ = {
 			isa = PBXGroup;
 			children = (
+				64498BEA2B3DA5C3003D5ED5 /* NautikHelper.entitlements */,
 				64CE03E52B17C370009608A4 /* NautikHelper.swift */,
 				64CE04012B1D10E2009608A4 /* Views */,
-				64CE04062B1E321C009608A4 /* KubeConfig.swift */,
+				64CE04062B1E321C009608A4 /* AppState.swift */,
 				64CE04042B1D18C1009608A4 /* StoredCluster.swift */,
+				64498BE62B3C35FE003D5ED5 /* Keychain.swift */,
 				64CE03FF2B1D05F3009608A4 /* Error.swift */,
 				64CE03E92B17C371009608A4 /* Assets.xcassets */,
-				64CE03EE2B17C371009608A4 /* NautikHelper.entitlements */,
 			);
 			path = "Nautik Helper";
 			sourceTree = "<group>";
@@ -82,7 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				64CE03E72B17C370009608A4 /* MainView.swift */,
-				64CE04022B1D1116009608A4 /* ManageKubeConfigsView.swift */,
+				64CE04022B1D1116009608A4 /* ManageClustersView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -168,9 +171,10 @@
 				64CE04002B1D05F3009608A4 /* Error.swift in Sources */,
 				64CE03E82B17C370009608A4 /* MainView.swift in Sources */,
 				64CE04052B1D18C1009608A4 /* StoredCluster.swift in Sources */,
-				64CE04032B1D1116009608A4 /* ManageKubeConfigsView.swift in Sources */,
-				64CE04072B1E321C009608A4 /* KubeConfig.swift in Sources */,
+				64CE04032B1D1116009608A4 /* ManageClustersView.swift in Sources */,
+				64CE04072B1E321C009608A4 /* AppState.swift in Sources */,
 				64CE03E62B17C370009608A4 /* NautikHelper.swift in Sources */,
+				64498BE72B3C35FE003D5ED5 /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,13 +305,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Nautik Helper/NautikHelper.entitlements";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B75X2VRBT3;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nautik Helper";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Elias Wilken";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -330,13 +337,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "Nautik Helper/NautikHelper.entitlements";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B75X2VRBT3;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Nautik Helper";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2023 Elias Wilken";
 				LD_RUNPATH_SEARCH_PATHS = (

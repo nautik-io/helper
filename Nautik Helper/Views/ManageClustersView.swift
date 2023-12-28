@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct ManageKubeConfigsView: View {
-    @Bindable var model: KubeConfigModel
+struct ManageClustersView: View {
+    @Bindable var state: AppState
     
     @State private var isShowingFileImporter = false
 
@@ -10,9 +10,9 @@ struct ManageKubeConfigsView: View {
     
     var body: some View {
         Form {
-            if !model.kubeConfigs.isEmpty {
+            if !state.kubeConfigs.isEmpty {
                 Section("Clusters") {
-                    List($model.kubeConfigs, id: \.path, editActions: [.move], selection: $selection) { kubeConfig in
+                    List($state.kubeConfigs, id: \.path, editActions: [.move], selection: $selection) { kubeConfig in
                         VStack(alignment: .leading) {
                             Label(kubeConfig.wrappedValue.path.path, systemImage: "doc")
                             
@@ -33,10 +33,22 @@ struct ManageKubeConfigsView: View {
                                             Spacer()
                                             
                                             Toggle("", isOn: Binding(
-                                                get: { true },
-                                                set: { _, _ in }
+                                                get: {
+                                                    state.clusters.contains(where: {
+                                                        $0.kubeConfigPath == watchedKubeConfig.path &&
+                                                        $0.kubeConfigContextName == cluster.context.name
+                                                    })
+                                                },
+                                                set: { addCluster in
+                                                    if addCluster {
+                                                        try? state.addCluster(cluster, path: watchedKubeConfig.path)
+                                                    } else {
+                                                        state.removeCluster(path: watchedKubeConfig.path, name: cluster.context.name)
+                                                    }
+                                                }
                                             ))
                                             .toggleStyle(.checkbox)
+                                            .labelsHidden()
                                         }
                                     }
                                 } else {
@@ -52,7 +64,7 @@ struct ManageKubeConfigsView: View {
                     }
                     .contextMenu(forSelectionType: URL.self) { localSelection in
                         Button(action: {
-                            model.kubeConfigs = model.kubeConfigs.filter { !localSelection.contains($0.path) }
+                            state.kubeConfigs = state.kubeConfigs.filter { !localSelection.contains($0.path) }
                         }) {
                             Text("Remove File\(localSelection.count > 1 ? "s" : "") From App")
                         }
@@ -68,7 +80,7 @@ struct ManageKubeConfigsView: View {
                 }
             }
             
-            Section(footer: Text("Add your kubeconfig files with the file picker. Drag and drop to reorder them. Right-click to delete them.")) {
+            Section(footer: Text("Add your kubeconfig files with the file picker. Drag and drop to reorder them. Right-click to remove them from the app.")) {
                 Button {
                     self.isShowingFileImporter = true
                 } label: {
@@ -83,8 +95,8 @@ struct ManageKubeConfigsView: View {
             case .success(let fileURL):
                 self.error = nil
                 
-                if !model.kubeConfigPaths.contains(fileURL) {
-                    model.kubeConfigPaths.append(fileURL)
+                if !state.kubeConfigPaths.contains(fileURL) {
+                    state.kubeConfigPaths.append(fileURL)
                 }
             case .failure(let error):
                 self.error = "Error opening the kubeconfig file: \(error)"

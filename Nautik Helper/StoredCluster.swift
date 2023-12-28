@@ -2,9 +2,10 @@ import Foundation
 import SwiftkubeClient
 import NIOSSL
 
-class StoredCluster {
+class StoredCluster: Codable, @unchecked Sendable {
     var id: UUID
-    var position: UInt
+    var keychain: Keychain.KeychainType
+    var position: Double
     var name: String
     
     var cluster: Cluster
@@ -15,6 +16,8 @@ class StoredCluster {
     var externalError: String?
     var error: String?
     
+    var kubeConfigDeviceID: UUID
+    var kubeConfigDeviceUser: String
     var kubeConfigPath: URL
     var kubeConfigContextName: String
     var evaluationExpiration: Date?
@@ -22,24 +25,27 @@ class StoredCluster {
     
     init(
         id: UUID,
-        position: UInt,
+        keychain: Keychain.KeychainType,
+        position: Double,
         name: String,
         
         cluster: Cluster,
         authInfo: AuthInfo,
-        execCredential: ExecCredential? = nil,
         
         defaultNamespace: String,
         
         externalError: String? = nil,
         error: String? = nil,
         
+        kubeConfigDeviceID: UUID,
+        kubeConfigDeviceUser: String,
         kubeConfigPath: URL,
         kubeConfigContextName: String,
         evaluationExpiration: Date?,
         lastEvaluation: Date
     ) {
         self.id = id
+        self.keychain = keychain
         self.position = position
         self.name = name
         
@@ -51,6 +57,8 @@ class StoredCluster {
         self.externalError = externalError
         self.error = error
         
+        self.kubeConfigDeviceID = kubeConfigDeviceID
+        self.kubeConfigDeviceUser = kubeConfigDeviceUser
         self.kubeConfigPath = kubeConfigPath
         self.kubeConfigContextName = kubeConfigContextName
         self.evaluationExpiration = evaluationExpiration
@@ -138,38 +146,7 @@ struct ExecCredential: Codable {
     }
 }
 
-internal func runProcess(command: String, arguments: [String]?, path: String? = nil) throws -> String? {
-    let task = Process()
-
-    if let path {
-        var env = ProcessInfo.processInfo.environment
-        if var existingPath = env["PATH"] {
-            existingPath = path + ":" + existingPath
-            env["PATH"] = existingPath
-        } else {
-            env["PATH"] = path
-        }
-    }
-
-    task.launchPath = command
-    if let arguments {
-        task.arguments = arguments
-    }
-
-    let pipe = Pipe()
-    task.standardOutput = pipe
-    task.standardError = pipe
-
-    task.launch()
-    task.waitUntilExit()
-
-    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let string = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
-
-    return string
-}
-
-internal func executeCommand(command: String, arguments: [String]?) throws -> String? {
+func executeCommand(command: String, arguments: [String]? = nil) throws -> String? {
     guard let shell = try runProcess(command: "/usr/bin/env", arguments: ["/bin/sh", "-cl", "echo $SHELL"]) else {
         throw "Couldn't evaluate the user's SHELL."
     }
@@ -178,7 +155,38 @@ internal func executeCommand(command: String, arguments: [String]?) throws -> St
         throw "Executable \(command) not found in the user's PATH."
     }
 
-    let stdout = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl", "eval $(/usr/libexec/path_helper -s) && \(command)\(arguments.map { $0.joined(separator: " ") } ?? "")"])
+    let stdout = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl", "eval $(/usr/libexec/path_helper -s) && \(command) \(arguments.map { $0.joined(separator: " ") } ?? "")"])
 
     return stdout
+    
+    func runProcess(command: String, arguments: [String]?, path: String? = nil) throws -> String? {
+        let task = Process()
+
+        if let path {
+            var env = ProcessInfo.processInfo.environment
+            if var existingPath = env["PATH"] {
+                existingPath = path + ":" + existingPath
+                env["PATH"] = existingPath
+            } else {
+                env["PATH"] = path
+            }
+        }
+
+        task.launchPath = command
+        if let arguments {
+            task.arguments = arguments
+        }
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+        task.standardError = pipe
+
+        task.launch()
+        task.waitUntilExit()
+
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        let string = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return string
+    }
 }
