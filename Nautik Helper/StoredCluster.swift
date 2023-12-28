@@ -12,8 +12,7 @@ class StoredCluster: Codable, @unchecked Sendable {
     var authInfo: AuthInfo
     
     var defaultNamespace: String
-    
-    var externalError: String?
+
     var error: String?
     
     var kubeConfigDeviceID: UUID
@@ -53,8 +52,7 @@ class StoredCluster: Codable, @unchecked Sendable {
         self.authInfo = authInfo
         
         self.defaultNamespace = defaultNamespace
-        
-        self.externalError = externalError
+
         self.error = error
         
         self.kubeConfigDeviceID = kubeConfigDeviceID

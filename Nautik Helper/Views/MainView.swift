@@ -43,9 +43,12 @@ struct MainView: View {
                     }
                 }
             } else {
-                Section(header: Text("Clusters")/*.padding(.top, -12)*/) {
-                    ForEach(state.clusters, id: \.id) { cluster in
-                        Text(cluster.name)
+                Section(
+                    header: Text("Clusters").padding(.leading, -10),
+                    footer: Text("The order of the clusters can be changed on the main app.")
+                ) {
+                    List($state.clusters, id: \.id) { cluster in
+                        ClusterItem(cluster)
                     }
                 }
             }
@@ -65,6 +68,99 @@ struct MainView: View {
         }
         .formStyle(.grouped)
         .padding(-6)
+    }
+    
+    @MainActor
+    @ViewBuilder
+    func ClusterItem(_ cluster: Binding<StoredCluster>) -> some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Label(cluster.wrappedValue.name, image: "NautikHelm")
+                    .labelStyle(ClusterLabelStyle())
+                
+                Spacer()
+                
+                ClusterCloudSwitcher(state: state, cluster: cluster)
+            }
+            
+            VStack(spacing: 4) {
+                LabeledContent("Path", value: cluster.wrappedValue.kubeConfigPath.path)
+                LabeledContent("Context", value: cluster.wrappedValue.kubeConfigContextName)
+                if let evaluationExpiration = cluster.wrappedValue.evaluationExpiration {
+                    LabeledContent("Expiration") {
+                        TimelineView(.periodic(from: .now, by: 1)) { _ in
+                            Text({
+                                if evaluationExpiration.timeIntervalSinceNow > 0 {
+                                    "in \(DateFormatter.default.string(from: (evaluationExpiration.timeIntervalSinceNow))!)"
+                                } else {
+                                    "\(DateFormatter.default.string(from: (evaluationExpiration.timeIntervalSinceNow * -1))!) ago"
+                                }
+                            }())
+                        }
+                    }
+                }
+                LabeledContent("Last Evaluation") {
+                    TimelineView(.periodic(from: .now, by: 1)) { _ in
+                        Text("\(DateFormatter.default.string(from: (cluster.wrappedValue.lastEvaluation.timeIntervalSinceNow * -1))!) ago")
+                    }
+                }
+            }
+            .padding(.leading, 33)
+            .font(.footnote)
+            .opacity(0.75)
+        }
+        .padding(.vertical, 4)
+    }
+    
+    struct ClusterCloudSwitcher: View {
+        @Bindable var state: AppState
+        
+        @Binding var cluster: StoredCluster
+        
+        @State private var showCloudSwitcherMenu = false
+        
+        @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+        
+        var body: some View {
+            Button {
+                showCloudSwitcherMenu.toggle()
+            } label: {
+                Label({
+                    switch cluster.keychain {
+                    case .localHelper: return "Local"
+                    case .iCloudHelper: return "iCloud"
+                    }
+                }(), systemImage: "icloud")
+                .symbolVariant({
+                    switch cluster.keychain {
+                    case .localHelper:
+                        return .slash
+                    case .iCloudHelper:
+                        return .none
+                    }
+                }())
+                .frame(height: 12)
+                .symbolRenderingMode(.hierarchical)
+                .foregroundColor(.secondary)
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(.plain)
+            .contentTransition(.symbolEffect(.replace))
+            .popover(isPresented: $showCloudSwitcherMenu) {
+                Picker("Keychain", selection: $cluster.keychain) {
+                    Text("Local").tag(Keychain.KeychainType.localHelper)
+                    Text("iCloud").tag(Keychain.KeychainType.iCloudHelper)
+                }
+                .labelsHidden()
+                .pickerStyle(.segmented)
+                .onChange(of: cluster.keychain) { _, _ in
+                    Task.detached {
+                        try? await Keychain.standard.saveCluster(cluster)
+                    }
+                }
+                .padding(10)
+            }
+        }
     }
     
     @MainActor
