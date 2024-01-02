@@ -55,7 +55,7 @@ struct MainView: View {
             
             if !state.invalidKubeConfigs.isEmpty {
                 Section {
-                    Text("\(state.invalidKubeConfigs.count) of your kubeconfig files \(state.invalidKubeConfigs.count > 1 ? "are" : "is") invalid. Visit the kubeconfig settings to resolve the issues.")
+                    Text("\(state.invalidKubeConfigs.count) of your kubeconfig files \(state.invalidKubeConfigs.count > 1 ? "are" : "is") invalid. Visit the cluster settings to resolve the issues.")
                     
                     Button {
                         openWindow(id: "manage-clusters")
@@ -89,24 +89,21 @@ struct MainView: View {
                 if let evaluationExpiration = cluster.wrappedValue.evaluationExpiration {
                     LabeledContent("Expiration") {
                         TimelineView(.periodic(from: .now, by: 1)) { _ in
-                            Text({
-                                if evaluationExpiration.timeIntervalSinceNow > 0 {
-                                    "in \(DateFormatter.default.string(from: (evaluationExpiration.timeIntervalSinceNow))!)"
-                                } else {
-                                    "\(DateFormatter.default.string(from: (evaluationExpiration.timeIntervalSinceNow * -1))!) ago"
-                                }
-                            }())
+                            Text(evaluationExpiration, style: .relative)
                         }
                     }
                 }
                 LabeledContent("Last Evaluation") {
-                    TimelineView(.periodic(from: .now, by: 1)) { _ in
-                        Text("\(DateFormatter.default.string(from: (cluster.wrappedValue.lastEvaluation.timeIntervalSinceNow * -1))!) ago")
-                    }
+                    Text(cluster.wrappedValue.lastEvaluation, style: .relative)
+                }
+                
+                if let error = cluster.wrappedValue.error {
+                    Text(error)
+                        .foregroundColor(.red)
                 }
             }
             .padding(.leading, 33)
-            .font(.footnote)
+            .font(.callout)
             .opacity(0.75)
         }
         .padding(.vertical, 4)
@@ -178,6 +175,7 @@ struct MainView: View {
                 } label: {
                     Label("About", systemImage: "info.circle")
                 }
+                .help("About")
                 .foregroundColor(.primary)
                 .labelStyle(.iconOnly)
                 .buttonStyle(.accessoryBar)
@@ -217,6 +215,7 @@ struct MainView: View {
                         NSApplication.shared.terminate(nil)
                     }
                 }
+                .help("Options")
                 .labelStyle(.iconOnly)
                 .buttonStyle(.accessoryBar)
             }

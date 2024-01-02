@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		64498BE72B3C35FE003D5ED5 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BE62B3C35FE003D5ED5 /* Keychain.swift */; };
 		64498BEE2B3E08CB003D5ED5 /* LabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */; };
-		64498BF02B3E0BF9003D5ED5 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BEF2B3E0BF9003D5ED5 /* DateFormatter.swift */; };
 		64498BF22B3E0C18003D5ED5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BF12B3E0C18003D5ED5 /* Color.swift */; };
 		64CE03E62B17C370009608A4 /* NautikHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03E52B17C370009608A4 /* NautikHelper.swift */; };
 		64CE03E82B17C370009608A4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03E72B17C370009608A4 /* MainView.swift */; };
@@ -27,7 +26,6 @@
 		64498BE62B3C35FE003D5ED5 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		64498BEA2B3DA5C3003D5ED5 /* NautikHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NautikHelper.entitlements; sourceTree = "<group>"; };
 		64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStyle.swift; sourceTree = "<group>"; };
-		64498BEF2B3E0BF9003D5ED5 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		64498BF12B3E0C18003D5ED5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		64CE03E22B17C370009608A4 /* Nautik Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nautik Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CE03E52B17C370009608A4 /* NautikHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NautikHelper.swift; sourceTree = "<group>"; };
@@ -83,7 +81,6 @@
 				64498BE62B3C35FE003D5ED5 /* Keychain.swift */,
 				64CE03FF2B1D05F3009608A4 /* Error.swift */,
 				64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */,
-				64498BEF2B3E0BF9003D5ED5 /* DateFormatter.swift */,
 				64498BF12B3E0C18003D5ED5 /* Color.swift */,
 				64CE03E92B17C371009608A4 /* Assets.xcassets */,
 			);
@@ -177,7 +174,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				64498BF02B3E0BF9003D5ED5 /* DateFormatter.swift in Sources */,
 				64CE04002B1D05F3009608A4 /* Error.swift in Sources */,
 				64CE03E82B17C370009608A4 /* MainView.swift in Sources */,
 				64498BF22B3E0C18003D5ED5 /* Color.swift in Sources */,

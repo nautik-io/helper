@@ -108,14 +108,21 @@ class StoredCluster: Codable, @unchecked Sendable {
                 throw "Executing \(exec.command) yielded no stdout."
             }
 
-            let credential = try Self.decoder.decode(ExecCredential.self, from: Data(stdout.utf8))
-
-            authInfo.token = credential.status.token
-            
-            authInfo.clientCertificateData = credential.status.clientCertificateData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
-            authInfo.clientKeyData = credential.status.clientKeyData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
-            
-            evaluationExpiration = credential.status.expirationTimestamp
+            do {
+                let credential = try Self.decoder.decode(ExecCredential.self, from: Data(stdout.utf8))
+                
+                authInfo.token = credential.status.token
+                
+                authInfo.clientCertificateData = credential.status.clientCertificateData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
+                authInfo.clientKeyData = credential.status.clientKeyData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
+                
+                evaluationExpiration = credential.status.expirationTimestamp
+            } catch {
+                // If we fail to decode an exec credential, there's probably
+                // an error on the stdout/stderr that is far more valuable
+                // to the user than the DecodingError we'd throw.
+                throw "\(stdout.utf8)"
+            }
         } else {
             evaluationExpiration = nil
         }
