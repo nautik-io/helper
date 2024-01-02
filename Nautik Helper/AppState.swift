@@ -77,6 +77,16 @@ class AppState {
             print("Error loading clusters from keychain: \(error)")
             clusters = []
         }
+        
+        startPeriodicClusterReEvaluation()
+    }
+    
+    deinit {
+        Task {
+            await MainActor.run {
+                stopPeriodicClusterReEvaluation()
+            }
+        }
     }
     
     func refreshClusters() {
@@ -114,6 +124,16 @@ class AppState {
         }
     }
     
+    func updateCluster(_ cluster: StoredCluster) throws {
+        if let i = self.clusters.firstIndex(where: { $0.id == cluster.id }) {
+            self.clusters[i] = cluster
+            
+            Task.detached {
+                try? await Keychain.standard.saveCluster(cluster)
+            }
+        }
+    }
+    
     func removeCluster(path kubeConfigPath: URL, name kubeConfigContextName: String) {
         guard let clusterToRemove = self.clusters.first(where: {
             $0.kubeConfigPath == kubeConfigPath && 
@@ -126,14 +146,64 @@ class AppState {
             try? await Keychain.standard.deleteCluster(clusterToRemove)
         }
     }
+    
+    func reEvaluateOutdatedClusters() async {
+        await Task.detached { [weak self] in
+            guard let clusters = await self?.clusters else { return }
+            for cluster in clusters {
+                // If the cluster has an evaluation expiration, re-evaluate it 7 minutes before the expiration.
+                if let evaluationExpiration = cluster.evaluationExpiration, evaluationExpiration > (Date.now + 60 * 7) {
+                    continue
+                }
+                // If it doesn't, re-evaluate it every 15 minutes.
+                if cluster.evaluationExpiration == nil && Date.now < (cluster.lastEvaluation + 60 * 15) {
+                    continue
+                }
+                
+                do {
+                    try cluster.evaluateAuth()
+                } catch {
+                    cluster.error = "Error evaluating cluster auth: \(error)"
+                }
+                
+                try? await self?.updateCluster(cluster)
+            }
+        }
+        .value
+    }
+    
+    var clusterReEvaluationTask: Task<Void, Error>? = nil
+    
+    func startPeriodicClusterReEvaluation() {
+        if let clusterReEvaluationTask {
+            clusterReEvaluationTask.cancel()
+        }
+        clusterReEvaluationTask = Task.detached { [weak self] in
+            while !Task.isCancelled {
+                await self?.reEvaluateOutdatedClusters()
+                
+                try await Task.sleep(nanoseconds: 15_000_000_000) // 15 seconds.
+            }
+        }
+    }
+    
+    func stopPeriodicClusterReEvaluation() {
+        if let clusterReEvaluationTask {
+            clusterReEvaluationTask.cancel()
+        }
+        clusterReEvaluationTask = nil
+    }
 }
 
 typealias KubeConfigPaths = [URL]
 
 extension KubeConfigPaths: RawRepresentable {
+    static let decoder = JSONDecoder()
+    static let encoder = JSONEncoder()
+    
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
-              let result = try? JSONDecoder().decode(KubeConfigPaths.self, from: data)
+              let result = try? Self.decoder.decode(KubeConfigPaths.self, from: data)
         else {
             return nil
         }
@@ -141,7 +211,7 @@ extension KubeConfigPaths: RawRepresentable {
     }
     
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
+        guard let data = try? Self.encoder.encode(self),
               let result = String(data: data, encoding: .utf8)
         else {
             return "[]"
