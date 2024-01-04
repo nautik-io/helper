@@ -1,3 +1,6 @@
 .DS_Store
 
+Nautik Helper.xcodeproj/xcuserdata/*
+Nautik Helper.xcodeproj/*xcworkspace/xcuserdata/*
+
 /dist
