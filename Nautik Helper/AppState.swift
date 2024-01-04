@@ -2,10 +2,13 @@ import Foundation
 import SwiftUI
 import SwiftkubeClient
 import Yams
+import AppUpdater
 
 @MainActor
 @Observable
 class AppState {
+    let updater = AppUpdater(owner: "nautik-io", repo: "helper")
+    
     static let decoder = YAMLDecoder()
     
     static let deviceUUID = (try? executeCommand(command: "ioreg", arguments: [#"-d2 -c IOPlatformExpertDevice | awk -F\" '/IOPlatformUUID/{print $(NF-1)}'"#]).map { UUID(uuidString: $0) ?? UUID() }) ?? UUID()
@@ -105,7 +108,7 @@ class AppState {
         }
     }
     
-    func addCluster(_ cluster: WatchedKubeConfig.Cluster, path kubeConfigPath: URL) throws {
+    func addCluster(_ cluster: WatchedKubeConfig.Cluster, path kubeConfigPath: URL) async throws {
         let lastPosition = self.clusters.last?.position ?? 0
         let newPosition = Double.random(in: lastPosition + 0.000001...lastPosition + 0.2)
         let newCluster = cluster.toStoredCluster(
@@ -115,26 +118,26 @@ class AppState {
             kubeConfigPath: kubeConfigPath
         )
         
-        try newCluster.evaluateAuth()
+        try await newCluster.evaluateAuth()
         
         self.clusters.append(newCluster)
         
-        Task.detached {
-            try? await Keychain.standard.saveCluster(newCluster)
-        }
+        try await Task.detached {
+            try await Keychain.standard.saveCluster(newCluster)
+        }.value
     }
     
-    func updateCluster(_ cluster: StoredCluster) throws {
+    func updateCluster(_ cluster: StoredCluster) async throws {
         if let i = self.clusters.firstIndex(where: { $0.id == cluster.id }) {
             self.clusters[i] = cluster
             
-            Task.detached {
-                try? await Keychain.standard.saveCluster(cluster)
-            }
+            try await Task.detached {
+                try await Keychain.standard.saveCluster(cluster)
+            }.value
         }
     }
     
-    func removeCluster(path kubeConfigPath: URL, name kubeConfigContextName: String) {
+    func removeCluster(path kubeConfigPath: URL, name kubeConfigContextName: String) async throws {
         guard let clusterToRemove = self.clusters.first(where: {
             $0.kubeConfigPath == kubeConfigPath && 
             $0.kubeConfigContextName == kubeConfigContextName
@@ -142,9 +145,9 @@ class AppState {
         
         self.clusters = self.clusters.filter { $0.id != clusterToRemove.id }
         
-        Task.detached {
-            try? await Keychain.standard.deleteCluster(clusterToRemove)
-        }
+        try await Task.detached {
+            try await Keychain.standard.deleteCluster(clusterToRemove)
+        }.value
     }
     
     func reEvaluateOutdatedClusters() async {
@@ -152,16 +155,16 @@ class AppState {
             guard let clusters = await self?.clusters else { return }
             for cluster in clusters {
                 // If the cluster has an evaluation expiration, re-evaluate it 7 minutes before the expiration.
-                if let evaluationExpiration = cluster.evaluationExpiration, evaluationExpiration > (Date.now + 60 * 7) {
+                if let credentialsExpireAt = cluster.credentialsExpireAt, credentialsExpireAt > (Date.now + 60 * 7) {
                     continue
                 }
                 // If it doesn't, re-evaluate it every 15 minutes.
-                if cluster.evaluationExpiration == nil && Date.now < (cluster.lastEvaluation + 60 * 15) {
+                if cluster.credentialsExpireAt == nil && Date.now < (cluster.lastEvaluation + 60 * 15) {
                     continue
                 }
                 
                 do {
-                    try cluster.evaluateAuth()
+                    try await cluster.evaluateAuth()
                 } catch {
                     cluster.error = "Error evaluating cluster auth: \(error)"
                 }
@@ -285,7 +288,7 @@ struct WatchedKubeConfig {
                 kubeConfigDeviceUser: kubeConfigDeviceUser,
                 kubeConfigPath: kubeConfigPath,
                 kubeConfigContextName: context.name,
-                evaluationExpiration: nil,
+                credentialsExpireAt: nil,
                 lastEvaluation: Date.now
             )
         }

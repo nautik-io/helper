@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6411AA8F2B44610B009BEE0E /* AppUpdater in Frameworks */ = {isa = PBXBuildFile; productRef = 6411AA8E2B44610B009BEE0E /* AppUpdater */; };
+		6411AA932B44BE3D009BEE0E /* ExportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6411AA922B44BE3D009BEE0E /* ExportOptions.plist */; };
 		64498BE72B3C35FE003D5ED5 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BE62B3C35FE003D5ED5 /* Keychain.swift */; };
 		64498BEE2B3E08CB003D5ED5 /* LabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */; };
 		64498BF22B3E0C18003D5ED5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BF12B3E0C18003D5ED5 /* Color.swift */; };
@@ -23,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6411AA922B44BE3D009BEE0E /* ExportOptions.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ExportOptions.plist; sourceTree = "<group>"; };
 		64498BE62B3C35FE003D5ED5 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		64498BEA2B3DA5C3003D5ED5 /* NautikHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NautikHelper.entitlements; sourceTree = "<group>"; };
 		64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStyle.swift; sourceTree = "<group>"; };
@@ -45,6 +48,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				64CE03FC2B1CEBD0009608A4 /* SwiftkubeClient in Frameworks */,
+				6411AA8F2B44610B009BEE0E /* AppUpdater in Frameworks */,
 				64CE03F92B1CEB88009608A4 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,6 +77,7 @@
 		64CE03E42B17C370009608A4 /* Nautik Helper */ = {
 			isa = PBXGroup;
 			children = (
+				6411AA922B44BE3D009BEE0E /* ExportOptions.plist */,
 				64498BEA2B3DA5C3003D5ED5 /* NautikHelper.entitlements */,
 				64CE03E52B17C370009608A4 /* NautikHelper.swift */,
 				64CE04012B1D10E2009608A4 /* Views */,
@@ -115,6 +120,7 @@
 			packageProductDependencies = (
 				64CE03F82B1CEB88009608A4 /* KeychainAccess */,
 				64CE03FB2B1CEBD0009608A4 /* SwiftkubeClient */,
+				6411AA8E2B44610B009BEE0E /* AppUpdater */,
 			);
 			productName = "Nautik Helper";
 			productReference = 64CE03E22B17C370009608A4 /* Nautik Helper.app */;
@@ -147,6 +153,7 @@
 			packageReferences = (
 				64CE03F72B1CEB88009608A4 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				64CE03FA2B1CEBD0009608A4 /* XCRemoteSwiftPackageReference "client" */,
+				6411AA8D2B44610B009BEE0E /* XCRemoteSwiftPackageReference "AppUpdater" */,
 			);
 			productRefGroup = 64CE03E32B17C370009608A4 /* Products */;
 			projectDirPath = "";
@@ -164,6 +171,7 @@
 			files = (
 				64CE03F52B18EA05009608A4 /* LICENSE in Resources */,
 				64CE03EA2B17C371009608A4 /* Assets.xcassets in Resources */,
+				6411AA932B44BE3D009BEE0E /* ExportOptions.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,6 +403,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		6411AA8D2B44610B009BEE0E /* XCRemoteSwiftPackageReference "AppUpdater" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mxcl/AppUpdater";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
 		64CE03F72B1CEB88009608A4 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
@@ -414,6 +430,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		6411AA8E2B44610B009BEE0E /* AppUpdater */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6411AA8D2B44610B009BEE0E /* XCRemoteSwiftPackageReference "AppUpdater" */;
+			productName = AppUpdater;
+		};
 		64CE03F82B1CEB88009608A4 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 64CE03F72B1CEB88009608A4 /* XCRemoteSwiftPackageReference "KeychainAccess" */;

@@ -43,20 +43,22 @@ struct ManageClustersView: View {
                                                         })
                                                     },
                                                     set: { addCluster in
-                                                        loading = true
-                                                        
-                                                        if addCluster {
-                                                            do {
-                                                                clusterErrors["\(watchedKubeConfig.path):\(cluster.context.name)"] = nil
-                                                                try state.addCluster(cluster, path: watchedKubeConfig.path)
-                                                            } catch {
-                                                                clusterErrors["\(watchedKubeConfig.path):\(cluster.context.name)"] = "Error adding cluster: \(error)"
+                                                        Task {
+                                                            loading = true
+                                                            
+                                                            if addCluster {
+                                                                do {
+                                                                    clusterErrors["\(watchedKubeConfig.path):\(cluster.context.name)"] = nil
+                                                                    try await state.addCluster(cluster, path: watchedKubeConfig.path)
+                                                                } catch {
+                                                                    clusterErrors["\(watchedKubeConfig.path):\(cluster.context.name)"] = "Error adding cluster: \(error)"
+                                                                }
+                                                            } else {
+                                                                try await state.removeCluster(path: watchedKubeConfig.path, name: cluster.context.name)
                                                             }
-                                                        } else {
-                                                            state.removeCluster(path: watchedKubeConfig.path, name: cluster.context.name)
+                                                            
+                                                            loading = false
                                                         }
-                                                        
-                                                        loading = false
                                                     }
                                                 ))
                                                 .toggleStyle(.checkbox)

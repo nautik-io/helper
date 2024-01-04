@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "appupdater",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mxcl/AppUpdater",
+      "state" : {
+        "revision" : "1b60169700489f16cfbe2feb6b1e32ca5c9464b8",
+        "version" : "1.1.1"
+      }
+    },
+    {
       "identity" : "async-http-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swift-server/async-http-client.git",
@@ -19,6 +28,15 @@
       }
     },
     {
+      "identity" : "foundation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/PromiseKit/Foundation",
+      "state" : {
+        "revision" : "985f17fa69ee0e5b7eb3ff9be87ffc4e05fc0927",
+        "version" : "3.4.0"
+      }
+    },
+    {
       "identity" : "keychainaccess",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
@@ -34,6 +52,24 @@
       "state" : {
         "revision" : "990eed2d25770ad8bc14ef2a74ffc5dc179a41f7",
         "version" : "0.13.0"
+      }
+    },
+    {
+      "identity" : "path.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mxcl/Path.swift",
+      "state" : {
+        "revision" : "8e355c28e9393c42e58b18c54cace2c42c98a616",
+        "version" : "1.4.1"
+      }
+    },
+    {
+      "identity" : "promisekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mxcl/PromiseKit.git",
+      "state" : {
+        "revision" : "8a98e31a47854d3180882c8068cc4d9381bf382d",
+        "version" : "6.22.1"
       }
     },
     {
@@ -124,6 +160,15 @@
       "state" : {
         "revision" : "ebf8b9c365a6ce043bf6e6326a04b15589bd285e",
         "version" : "1.20.0"
+      }
+    },
+    {
+      "identity" : "version",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mxcl/Version",
+      "state" : {
+        "revision" : "200046c93f6d5d78a6d72bfd9c0b27a95e9c0a2b",
+        "version" : "1.2.0"
       }
     },
     {

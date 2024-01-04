@@ -19,7 +19,7 @@ class StoredCluster: Codable, @unchecked Sendable {
     var kubeConfigDeviceUser: String
     var kubeConfigPath: URL
     var kubeConfigContextName: String
-    var evaluationExpiration: Date?
+    var credentialsExpireAt: Date?
     var lastEvaluation: Date
     
     init(
@@ -32,15 +32,14 @@ class StoredCluster: Codable, @unchecked Sendable {
         authInfo: AuthInfo,
         
         defaultNamespace: String,
-        
-        externalError: String? = nil,
+
         error: String? = nil,
         
         kubeConfigDeviceID: UUID,
         kubeConfigDeviceUser: String,
         kubeConfigPath: URL,
         kubeConfigContextName: String,
-        evaluationExpiration: Date?,
+        credentialsExpireAt: Date?,
         lastEvaluation: Date
     ) {
         self.id = id
@@ -59,7 +58,7 @@ class StoredCluster: Codable, @unchecked Sendable {
         self.kubeConfigDeviceUser = kubeConfigDeviceUser
         self.kubeConfigPath = kubeConfigPath
         self.kubeConfigContextName = kubeConfigContextName
-        self.evaluationExpiration = evaluationExpiration
+        self.credentialsExpireAt = credentialsExpireAt
         self.lastEvaluation = lastEvaluation
     }
     
@@ -69,7 +68,7 @@ class StoredCluster: Codable, @unchecked Sendable {
         return decoder
     }()
     
-    func evaluateAuth() throws {
+    func evaluateAuth() async throws {
         if let caFile = cluster.certificateAuthority {
             let caData = try Data(contentsOf: URL(fileURLWithPath: caFile))
             cluster.certificateAuthorityData = caData
@@ -104,27 +103,32 @@ class StoredCluster: Codable, @unchecked Sendable {
         }
 
         if let exec = authInfo.exec {
-            guard let stdout = try? executeCommand(command: exec.command, arguments: exec.args) else {
-                throw "Executing \(exec.command) yielded no stdout."
+            try await Task.detached { [weak self] in
+                guard let stdout = try? executeCommand(command: exec.command, arguments: exec.args) else {
+                    throw "Executing \(exec.command) yielded no stdout."
+                }
+                
+                do {
+                    let credential = try Self.decoder.decode(ExecCredential.self, from: Data(stdout.utf8))
+                    
+                    await MainActor.run { [weak self] in
+                        self?.authInfo.token = credential.status.token
+                        
+                        self?.authInfo.clientCertificateData = credential.status.clientCertificateData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
+                        self?.authInfo.clientKeyData = credential.status.clientKeyData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
+                        
+                        self?.credentialsExpireAt = credential.status.expirationTimestamp
+                    }
+                } catch {
+                    // If we fail to decode an exec credential, there's probably
+                    // an error on the stdout/stderr that is far more valuable
+                    // to the user than the DecodingError we'd throw.
+                    throw "\(stdout.utf8)"
+                }
             }
-
-            do {
-                let credential = try Self.decoder.decode(ExecCredential.self, from: Data(stdout.utf8))
-                
-                authInfo.token = credential.status.token
-                
-                authInfo.clientCertificateData = credential.status.clientCertificateData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
-                authInfo.clientKeyData = credential.status.clientKeyData.map { $0.data(using: .utf8).map { Data(base64Encoded: $0) } ?? nil } ?? nil
-                
-                evaluationExpiration = credential.status.expirationTimestamp
-            } catch {
-                // If we fail to decode an exec credential, there's probably
-                // an error on the stdout/stderr that is far more valuable
-                // to the user than the DecodingError we'd throw.
-                throw "\(stdout.utf8)"
-            }
+            .value
         } else {
-            evaluationExpiration = nil
+            credentialsExpireAt = nil
         }
         
         lastEvaluation = Date.now
@@ -132,7 +136,7 @@ class StoredCluster: Codable, @unchecked Sendable {
 }
 
 // TODO: Replace this with the patched upstream `ExecCredential`
-struct ExecCredential: Codable {
+struct ExecCredential: Codable, @unchecked Sendable {
     let apiVersion: String
     let kind: String
     let spec: Spec

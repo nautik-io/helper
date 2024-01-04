@@ -45,7 +45,7 @@ struct MainView: View {
             } else {
                 Section(
                     header: Text("Clusters").padding(.leading, -10),
-                    footer: Text("The order of the clusters can be changed on the main app.")
+                    footer: Text("The order and names of the clusters can be changed on the main app.")
                 ) {
                     List($state.clusters, id: \.id) { cluster in
                         ClusterItem(cluster)
@@ -86,10 +86,10 @@ struct MainView: View {
             VStack(spacing: 4) {
                 LabeledContent("Path", value: cluster.wrappedValue.kubeConfigPath.path)
                 LabeledContent("Context", value: cluster.wrappedValue.kubeConfigContextName)
-                if let evaluationExpiration = cluster.wrappedValue.evaluationExpiration {
+                if let credentialsExpireAt = cluster.wrappedValue.credentialsExpireAt {
                     LabeledContent("Expiration") {
                         TimelineView(.periodic(from: .now, by: 1)) { _ in
-                            Text(evaluationExpiration, style: .relative)
+                            Text(credentialsExpireAt, style: .relative)
                         }
                     }
                 }
@@ -207,7 +207,14 @@ struct MainView: View {
                     }
                     Divider()
                     Button("Check for Updates") {
-                        
+                        state.updater.check().catch(policy: .allErrors) { error in
+                            if error.isCancelled {
+                                // Promise is cancelled if we are already up-to-date.
+                                return
+                            }
+                            
+                            print("Error checking for updates: \(error)")
+                        }
                     }
                     Divider()
                     Toggle("Launch at Login", isOn: $launchAppAtLogin)
