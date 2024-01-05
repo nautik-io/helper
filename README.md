@@ -23,7 +23,7 @@ Clusters on the keychain are continuously evaluated by the helper app. If a clus
 
 Support for the `auth-provider` field on the kubeconfig is currently unimplemented. But support for the `oidc` auth provider is planned to be included on the main app at a later point. Contributions to the helper app extending the range of supported auth methods are very welcome.
 
-The helper app evaluates the refresh timestamps on stored clusters every 10 seconds, refreshes `client-certificate`, `client-key` and `token-file` values every 15 minutes and re-evaluates `exec` plugin outputs 5 minutes before they expire.
+The helper app evaluates the refresh timestamps on stored clusters every 30 seconds, refreshes `client-certificate`, `client-key` and `token-file` values every 15 minutes and re-evaluates `exec` plugin outputs 5 minutes before they expire.
 
 To allow to be run on multiple Macs and user accounts in parallel without interference, the helper app stores the device UUID and user of the system it was added on with the cluster.
 

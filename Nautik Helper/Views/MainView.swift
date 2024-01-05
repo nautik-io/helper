@@ -83,7 +83,7 @@ struct MainView: View {
                 ClusterCloudSwitcher(state: state, cluster: cluster)
             }
             
-            VStack(spacing: 4) {
+            VStack(alignment: .leading, spacing: 4) {
                 LabeledContent("Path", value: cluster.wrappedValue.kubeConfigPath.path)
                 LabeledContent("Context", value: cluster.wrappedValue.kubeConfigContextName)
                 if let credentialsExpireAt = cluster.wrappedValue.credentialsExpireAt {

@@ -16,9 +16,7 @@ struct NautikHelperApp: App {
                         // Refresh clusters when the main window is opened.
                         if NSApplication.shared.keyWindow != nil {
                             Task { [weak state] in
-                                await MainActor.run { [weak state] in
-                                    state?.refreshClusters()
-                                }
+                                try? await state?.refreshClusters()
                             }
                         }
                     }

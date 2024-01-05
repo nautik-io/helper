@@ -92,20 +92,47 @@ class AppState {
         }
     }
     
-    func refreshClusters() {
-        Task.detached { [weak self] in
-            do {
-                guard let self else { return }
-                
-                let clusters = try await Keychain.standard.listClusters()
-                
-                await MainActor.run { [weak self] in
-                    self?.clusters = clusters
-                }
-            } catch {
-                print("Error reloading clusters from keychain: \(error)")
+    func refreshClusters() async throws {
+        try await Task.detached { [weak self] in
+            guard let self else { return }
+            
+            let clusters = try await Keychain.standard.listClusters()
+            
+            // In case the main app changed something on the clusters on the keychain,
+            // we're always setting our internal cluster state to the keychain's.
+            await MainActor.run {
+                self.clusters = clusters
             }
-        }
+            
+            for cluster in clusters {
+                // If the cluster has an evaluation expiration, re-evaluate it 7 minutes before the expiration.
+                if let credentialsExpireAt = cluster.credentialsExpireAt, credentialsExpireAt > (Date.now + 60 * 7) {
+                    continue
+                }
+                // If it doesn't, re-evaluate it every 15 minutes.
+                if cluster.credentialsExpireAt == nil && Date.now < (cluster.lastEvaluation + 60 * 15) {
+                    continue
+                }
+                
+                // Refresh cluster info, auth info & namespace from the file and re-evaluate auth.
+                if case let .ok(watchResult) = await self.kubeConfigs.first(where: { $0.path == cluster.kubeConfigPath }),
+                   let watchedCluster = watchResult.clusters.first(where: { $0.context.name == cluster.kubeConfigContextName }) {
+                    cluster.cluster = watchedCluster.cluster.cluster
+                    cluster.authInfo = watchedCluster.authInfo.authInfo
+                    cluster.defaultNamespace = watchedCluster.context.context.namespace ?? cluster.defaultNamespace
+                    
+                    do {
+                        try await cluster.evaluateAuth()
+                    } catch {
+                        cluster.error = "Error evaluating cluster auth: \(error)"
+                    }
+                } else {
+                    cluster.error = "Error refreshing cluster from the watched kubeconfig at \(cluster.kubeConfigPath) - \(cluster.kubeConfigContextName)"
+                }
+                
+                try? await self.updateCluster(cluster)
+            }
+        }.value
     }
     
     func addCluster(_ cluster: WatchedKubeConfig.Cluster, path kubeConfigPath: URL) async throws {
@@ -150,31 +177,6 @@ class AppState {
         }.value
     }
     
-    func reEvaluateOutdatedClusters() async {
-        await Task.detached { [weak self] in
-            guard let clusters = await self?.clusters else { return }
-            for cluster in clusters {
-                // If the cluster has an evaluation expiration, re-evaluate it 7 minutes before the expiration.
-                if let credentialsExpireAt = cluster.credentialsExpireAt, credentialsExpireAt > (Date.now + 60 * 7) {
-                    continue
-                }
-                // If it doesn't, re-evaluate it every 15 minutes.
-                if cluster.credentialsExpireAt == nil && Date.now < (cluster.lastEvaluation + 60 * 15) {
-                    continue
-                }
-                
-                do {
-                    try await cluster.evaluateAuth()
-                } catch {
-                    cluster.error = "Error evaluating cluster auth: \(error)"
-                }
-                
-                try? await self?.updateCluster(cluster)
-            }
-        }
-        .value
-    }
-    
     var clusterReEvaluationTask: Task<Void, Error>? = nil
     
     func startPeriodicClusterReEvaluation() {
@@ -183,9 +185,9 @@ class AppState {
         }
         clusterReEvaluationTask = Task.detached { [weak self] in
             while !Task.isCancelled {
-                await self?.reEvaluateOutdatedClusters()
+                try? await self?.refreshClusters()
                 
-                try await Task.sleep(nanoseconds: 15_000_000_000) // 15 seconds.
+                try await Task.sleep(nanoseconds: 30_000_000_000) // 30 seconds.
             }
         }
     }
@@ -242,7 +244,7 @@ enum WatchResult {
     }
 }
 
-struct WatchedKubeConfig {
+class WatchedKubeConfig {
     let path: URL
     var kubeConfig: KubeConfig
     
@@ -295,7 +297,7 @@ struct WatchedKubeConfig {
     }
 }
 
-struct WatchError {
+class WatchError {
     let path: URL
     let error: String
     
