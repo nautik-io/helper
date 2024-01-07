@@ -11,6 +11,7 @@ class AppState {
     
     static let decoder = YAMLDecoder()
     
+    static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     static let deviceUUID = (try? executeCommand(command: "ioreg", arguments: [#"-d2 -c IOPlatformExpertDevice | awk -F\" '/IOPlatformUUID/{print $(NF-1)}'"#]).map { UUID(uuidString: $0) ?? UUID() }) ?? UUID()
     static let currentUser = (try? executeCommand(command: "id", arguments: ["-un"])) ?? "unknown"
     

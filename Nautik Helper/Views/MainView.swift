@@ -165,8 +165,16 @@ struct MainView: View {
     var titleBar: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Nautik Helper")
-                    .bold()
+                VStack(alignment: .leading) {
+                    Text("Nautik Helper")
+                        .bold()
+                    
+                    if let appVersion = AppState.appVersion {
+                        Text("Version \(appVersion)")
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
+                    }
+                }
                 
                 Spacer()
                 
