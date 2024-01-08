@@ -131,6 +131,7 @@ class StoredCluster: Codable, @unchecked Sendable {
             credentialsExpireAt = nil
         }
         
+        error = nil
         lastEvaluation = Date.now
     }
 }
