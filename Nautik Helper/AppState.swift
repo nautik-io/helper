@@ -106,15 +106,6 @@ class AppState {
             }
             
             for cluster in clusters {
-                // If the cluster has an evaluation expiration, re-evaluate it 7 minutes before the expiration.
-                if let credentialsExpireAt = cluster.credentialsExpireAt, credentialsExpireAt > (Date.now + 60 * 7) {
-                    continue
-                }
-                // If it doesn't, re-evaluate it every 15 minutes.
-                if cluster.credentialsExpireAt == nil && Date.now < (cluster.lastEvaluation + 60 * 15) {
-                    continue
-                }
-                
                 // Refresh cluster info, auth info & namespace from the file and re-evaluate auth.
                 if case let .ok(watchResult) = await self.kubeConfigs.first(where: { $0.path == cluster.kubeConfigPath }),
                    let watchedCluster = watchResult.clusters.first(where: { $0.context.name == cluster.kubeConfigContextName }) {
