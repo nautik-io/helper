@@ -104,7 +104,7 @@ class StoredCluster: Codable, @unchecked Sendable {
 
         if let exec = authInfo.exec {
             try await Task.detached { [weak self] in
-                guard let stdout = try? executeCommand(command: exec.command, arguments: exec.args) else {
+                guard let stdout = try executeCommand(command: exec.command, arguments: exec.args) else {
                     throw "Executing \(exec.command) yielded no stdout."
                 }
                 
@@ -160,12 +160,15 @@ func executeCommand(command: String, arguments: [String]? = nil) throws -> Strin
     guard let shell = try runProcess(command: "/usr/bin/env", arguments: ["/bin/sh", "-cl", "echo $SHELL"]) else {
         throw "Couldn't evaluate the user's SHELL."
     }
-
-    if try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl", "eval $(/usr/libexec/path_helper -s) && which \(command)"]) == nil {
+    
+    guard let cmdPath = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl\(shell.contains("zsh") ? "i" : "")", "which \(command)"]) else {
+        throw "Executable \(command) not found in the user's PATH."
+    }
+    if cmdPath == "\(command) not found" {
         throw "Executable \(command) not found in the user's PATH."
     }
 
-    let stdout = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl", "eval $(/usr/libexec/path_helper -s) && \(command) \(arguments.map { $0.joined(separator: " ") } ?? "")"])
+    let stdout = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl", "\(cmdPath) \(arguments.map { $0.joined(separator: " ") } ?? "")"])
 
     return stdout
     
