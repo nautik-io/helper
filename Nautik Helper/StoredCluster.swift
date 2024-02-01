@@ -161,14 +161,14 @@ func executeCommand(command: String, arguments: [String]? = nil) throws -> Strin
         throw "Couldn't evaluate the user's SHELL."
     }
 
-    guard let cmdPath = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl\(shell.contains("zsh") ? "i" : "")", "which \(command)"]) else {
+    guard let cmdPath = try runProcess(command: shell, arguments: ["-cl\(shell.contains("zsh") ? "i" : "")", "which \(command)"]) else {
         throw "Executable \(command) not found in the user's PATH."
     }
     if cmdPath == "\(command) not found" {
         throw "Executable \(command) not found in the user's PATH."
     }
 
-    let stdout = try runProcess(command: "/usr/bin/env", arguments: [shell, "-cl\(shell.contains("zsh") ? "i" : "")", "\(cmdPath) \(arguments.map { $0.joined(separator: " ") } ?? "")"])
+    let stdout = try runProcess(command: shell, arguments: ["-cl\(shell.contains("zsh") ? "i" : "")", "\(cmdPath) \(arguments.map { $0.joined(separator: " ") } ?? "")"])
 
     return stdout
 
