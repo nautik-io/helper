@@ -298,3 +298,33 @@ class WatchError {
         self.error = error
     }
 }
+
+func executeCommand(command: String, arguments: [String]? = nil) throws -> String? {
+    let task = Process()
+
+    task.executableURL = URL(fileURLWithPath: command)
+    if let arguments {
+        task.arguments = arguments
+    }
+
+    let outputPipe = Pipe()
+    let errorPipe = Pipe()
+    task.standardOutput = outputPipe
+    task.standardError = errorPipe
+
+    try task.run()
+
+    let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+    let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+    
+    let output = String(decoding: outputData, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
+    let error = String(decoding: errorData, as: UTF8.self)
+    
+    task.waitUntilExit()
+    
+    if !error.isEmpty {
+        throw error
+    }
+
+    return output
+}
