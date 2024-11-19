@@ -244,7 +244,7 @@ class WatchedKubeConfig {
         guard let contexts = kubeConfig.contexts else { return [] }
         return contexts.compactMap { context in
             if let cluster = kubeConfig.clusters?.first(where: { $0.name == context.name }),
-               let authInfo = kubeConfig.users?.first(where: { $0.name == context.name }) {
+               let authInfo = kubeConfig.users?.first(where: { $0.name == context.context.user }) {
                 return Cluster(context: context, cluster: cluster, authInfo: authInfo)
             }
             return nil

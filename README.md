@@ -35,4 +35,4 @@ We rely on [AppUpdater](https://github.com/mxcl/AppUpdater) and GitHub releases 
 
 ## About Nautik
 
-Nautik is an accessible, concurrent Kubernetes client that is native to Apple platforms. Our mission is to build the best possible Kubernetes UX for the Apple ecosystem. Our app is currently in beta, with a first stable release expected this winter. To join our TestFlight, visit [our website](https://nautik.io) and sign up.
+Nautik is an accessible, concurrent Kubernetes client that is native to Apple platforms. Our mission is to build the best possible Kubernetes UX for the Apple ecosystem. You can get Nautik [on the App Store](https://apps.apple.com/app/apple-store/id1672838783?pt=126097015&ct=GitHub&mt=8).
