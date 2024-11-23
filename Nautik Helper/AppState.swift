@@ -12,8 +12,8 @@ class AppState {
     static let decoder = YAMLDecoder()
     
     static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-    static let deviceUUID = (try? executeCommand(command: "ioreg", arguments: [#"-d2 -c IOPlatformExpertDevice | awk -F\" '/IOPlatformUUID/{print $(NF-1)}'"#]).map { UUID(uuidString: $0) ?? UUID() }) ?? UUID()
-    static let currentUser = (try? executeCommand(command: "id", arguments: ["-un"])) ?? "unknown"
+    static let deviceUUID = (try? executeCommand(command: "/usr/sbin/system_profiler", arguments: [#"SPHardwareDataType"#]).map { extractHardwareUUID(from: $0) ?? UUID() }) ?? UUID()
+    static let currentUser = (try? executeCommand(command: "/usr/bin/id", arguments: ["-un"])) ?? "unknown"
     
     private var kubeConfigPathsCache: KubeConfigPaths
     
@@ -327,4 +327,17 @@ func executeCommand(command: String, arguments: [String]? = nil) throws -> Strin
     }
 
     return output
+}
+
+func extractHardwareUUID(from output: String) -> UUID? {
+    let lines = output.split(separator: "\n")
+    
+    if let idLine = lines.first(where: { $0.contains("Hardware UUID") }) {
+        let components = idLine.split(separator: ":").map { $0.trimmingCharacters(in: .whitespaces) }
+        if components.count == 2 {
+            return UUID(uuidString: components[1])
+        }
+    }
+    
+    return nil
 }
