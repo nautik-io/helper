@@ -196,6 +196,9 @@ func executeExecConfig(
         environment["KUBERNETES_EXEC_INFO"] = execCredentialString
     }
     
+    // Set the TERM variable for proper terminfo loading.
+    environment["TERM"] = "xterm"
+    
     // Ensure custom environment variables are used.
     process.environment = environment
     
