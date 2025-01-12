@@ -155,16 +155,20 @@ func executeExecConfig(
     let args = execConfig.args?.joined(separator: " ") ?? ""
     var arguments = ["-l", "-c", "\(execConfig.command) \(args)"]
     
-    // `-i` doesn't seem to work on bash.
-    // TODO: We probably want to implement a better check, specific to more different shells.
-    if interactiveMode && !defaultShell.contains("bash") {
-        arguments.insert("-i", at: 0)
+    if interactiveMode && defaultShell.contains("zsh") {
+        // `-i` is necessary on zsh in order for e.g. `google-cloud-sdk` to be sourced from .zshrc.
+        // `--nozle` is necessary to disable zle on zsh despite running an interactive shell.
+        arguments = ["-i", "--nozle"] + arguments
     }
     
     process.arguments = arguments
     
     // Prepare environment variables, appending or overriding the existing ones.
     var environment = ProcessInfo.processInfo.environment // Start with current environment.
+    
+    // Ensure proper terminal setup.
+    environment["TERM"] = "xterm"
+    
     execConfig.env?.forEach { envVar in
         environment[envVar.name] = envVar.value
     }
@@ -195,9 +199,6 @@ func executeExecConfig(
         
         environment["KUBERNETES_EXEC_INFO"] = execCredentialString
     }
-    
-    // Set the TERM variable for proper terminfo loading.
-    environment["TERM"] = "xterm"
     
     // Ensure custom environment variables are used.
     process.environment = environment
