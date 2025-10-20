@@ -1,9 +1,6 @@
-<img src="/Nautik Helper/Assets.xcassets/AppIcon.appiconset/app_icon_helper_256.png" align="right" width="128" height="128" />
+<img src="https://github.com/user-attachments/assets/efb64209-82ca-4b3e-bae5-2e53142fbaaa" align="right" width="100" height="100" />
 
 # Nautik Helper
-
-<!-- [![CI](https://github.com/nautik-io/helper/actions/workflows/ci.yml/badge.svg)](https://github.com/nautik-io/helper/actions/workflows/ci.yml)
-[![Release](https://github.com/nautik-io/helper/actions/workflows/release.yml/badge.svg)](https://github.com/nautik-io/helper/actions/workflows/release.yml) -->
 
 Helper app to bridge Nautik's compatibility with the full kubeconfig spec, including exec plugins, without having the main app exit the sandbox.
 
@@ -15,13 +12,9 @@ If you can prevent using this, don't use it and try using the auth scenarios imp
 
 The helper app allows you to add kubeconfig files to keep track of via a file picker UI. The file paths of tracked kubeconfig files are stored on the [`UserDefaults`](https://developer.apple.com/documentation/foundation/userdefaults) in a serialized array of paths under the key `kubeconfigs`. Every valid cluster on the tracked kubeconfig files can be added to (or removed from) the keychain with a checkbox UI on the helper app's settings.
 
-<img width="385" alt="The Nautik Helper app's main window, showing two Kubernetes clusters under management." src="https://github.com/nautik-io/helper/assets/19625431/550627e2-e380-4789-af89-a56f1f09e2cc">
+<img width="344" height="453" alt="The Nautik Helper app's main window, showing two Kubernetes clusters under management." src="https://github.com/user-attachments/assets/bd3fe271-0c2d-42e2-8a6e-c02ba4a8970b" />
 
 Clusters on the keychain are reevaluated by the helper app every 30 seconds. If a cluster's corresponding kubeconfig entry includes `client-certificate`, `client-key` or `token-file` keys, the file contents of the corresponding files are copied into the `client-certificate-data`, `client-key-data` and `token` fields of the stored cluster to have them be consumed by the main app on macOS, iOS or iPadOS. If a cluster's corresponding kubeconfig entry includes an `exec` value, the helper app spawns a process as the user running the helper app, executing the corresponding exec-based authentication plugin and copying its output into the `client-certificate-data`, `client-key-data` and `token` fields of the stored cluster to have them be consumed by the main app.
-
-<img width="472" alt="The Nautik Helper app's cluster settings window, showing two kubeconfig files with one Kubernetes cluster inside of each." src="https://github.com/nautik-io/helper/assets/19625431/698b8691-5eb1-4b4c-b86b-8bc36da28e43">
-
-Support for the `auth-provider` field on the kubeconfig is currently unimplemented. But support for the `oidc` auth provider is planned to be included on the main app at a later point. Contributions to the helper app extending the range of supported auth methods are very welcome.
 
 To allow to be run on multiple Macs and user accounts in parallel without interference, the helper app stores the device UUID and user of the system it was added on with the cluster.
 

@@ -12,6 +12,7 @@
 		64498BE72B3C35FE003D5ED5 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BE62B3C35FE003D5ED5 /* Keychain.swift */; };
 		64498BEE2B3E08CB003D5ED5 /* LabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */; };
 		64498BF22B3E0C18003D5ED5 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64498BF12B3E0C18003D5ED5 /* Color.swift */; };
+		646887022EA6A2130079145D /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 6476E2DF2EA626CE00DF53C1 /* AppIcon.icon */; };
 		64CE03E62B17C370009608A4 /* NautikHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03E52B17C370009608A4 /* NautikHelper.swift */; };
 		64CE03E82B17C370009608A4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CE03E72B17C370009608A4 /* MainView.swift */; };
 		64CE03EA2B17C371009608A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64CE03E92B17C371009608A4 /* Assets.xcassets */; };
@@ -30,6 +31,7 @@
 		64498BEA2B3DA5C3003D5ED5 /* NautikHelper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NautikHelper.entitlements; sourceTree = "<group>"; };
 		64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStyle.swift; sourceTree = "<group>"; };
 		64498BF12B3E0C18003D5ED5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		6476E2DF2EA626CE00DF53C1 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		64C90FB12B7FA9FF00AEF950 /* client */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = client; path = ../client; sourceTree = "<group>"; };
 		64CE03E22B17C370009608A4 /* Nautik Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nautik Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CE03E52B17C370009608A4 /* NautikHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NautikHelper.swift; sourceTree = "<group>"; };
@@ -63,6 +65,7 @@
 				64C90FB12B7FA9FF00AEF950 /* client */,
 				64CE03F62B193A14009608A4 /* README.md */,
 				64CE03F42B18EA05009608A4 /* LICENSE */,
+				6476E2DF2EA626CE00DF53C1 /* AppIcon.icon */,
 				64CE03E42B17C370009608A4 /* Nautik Helper */,
 				64CE03E32B17C370009608A4 /* Products */,
 			);
@@ -171,6 +174,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				646887022EA6A2130079145D /* AppIcon.icon in Resources */,
 				64CE03F52B18EA05009608A4 /* LICENSE in Resources */,
 				64CE03EA2B17C371009608A4 /* Assets.xcassets in Resources */,
 				6411AA932B44BE3D009BEE0E /* ExportOptions.plist in Resources */,
@@ -322,6 +326,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Nautik Helper/NautikHelper.entitlements";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -334,13 +339,13 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Nautik Helper";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2024 DWRPD Software UG (haftungsbeschränkt)";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2025 DWRPD Software UG (haftungsbeschränkt)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = io.nautik.Nautik.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -354,6 +359,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Nautik Helper/NautikHelper.entitlements";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -366,13 +372,13 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Nautik Helper";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_LSUIElement = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2024 DWRPD Software UG (haftungsbeschränkt)";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "© 2025 DWRPD Software UG (haftungsbeschränkt)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = io.nautik.Nautik.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

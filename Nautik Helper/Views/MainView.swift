@@ -186,7 +186,6 @@ struct MainView: View {
                 .help("About")
                 .foregroundColor(.primary)
                 .labelStyle(.iconOnly)
-                .buttonStyle(.accessoryBar)
                 .popover(isPresented: $isShowingAboutPopover) {
                     VStack {
                         Text("""
@@ -197,7 +196,7 @@ struct MainView: View {
                         to share the resulting auth information
                         with the sandboxed main app.
                         """)
-                        .frame(maxWidth: 200)
+                        .frame(maxWidth: 200, minHeight: 80)
                         .font(.footnote)
                         .multilineTextAlignment(.leading)
                         
@@ -232,7 +231,6 @@ struct MainView: View {
                 }
                 .help("Options")
                 .labelStyle(.iconOnly)
-                .buttonStyle(.accessoryBar)
             }
             
             Divider()
