@@ -37,6 +37,7 @@ struct MainView: View {
                         // attaching the file importer to the menu bar extra
                         // directly is glitchy on close of the menu bar window.
                         openWindow(id: "manage-clusters")
+                        forceManageClustersViewIntoFocus()
                     } label: {
                         Label("Add Cluster", systemImage: "plus")
                             .frame(maxWidth: .infinity)
@@ -59,6 +60,7 @@ struct MainView: View {
                     
                     Button {
                         openWindow(id: "manage-clusters")
+                        forceManageClustersViewIntoFocus()
                     } label: {
                         Label("Manage Clusters", systemImage: "gear")
                             .frame(maxWidth: .infinity)
@@ -211,6 +213,7 @@ struct MainView: View {
                 Menu("Options", systemImage: "switch.2") {
                     Button("Manage Clusters") {
                         openWindow(id: "manage-clusters")
+                        forceManageClustersViewIntoFocus()
                     }
                     Divider()
                     Button("Check for Updates") {
@@ -237,5 +240,12 @@ struct MainView: View {
         }
         .padding(.horizontal, 14)
         .padding(.top, 14)
+    }
+    
+    func forceManageClustersViewIntoFocus() {
+        if let window = NSApplication.shared.windows.first(where: { $0.title == "Manage Clusters" }) {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
     }
 }

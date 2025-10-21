@@ -3,10 +3,10 @@ import SwiftUI
 @main
 @MainActor
 struct NautikHelperApp: App {
-    @State var state = AppState()
+    @State private var state = AppState()
     
     // https://damian.fyi/swift/2022/12/29/detecting-when-a-swiftui-menubarextra-with-window-style-is-opened.html
-    @State var observer: NSKeyValueObservation?
+    @State private var observer: NSKeyValueObservation?
     
     var body: some Scene {
         MenuBarExtra("Nautik Helper", image: "NautikHelm") {

@@ -32,7 +32,6 @@
 		64498BED2B3E08CB003D5ED5 /* LabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelStyle.swift; sourceTree = "<group>"; };
 		64498BF12B3E0C18003D5ED5 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		6476E2DF2EA626CE00DF53C1 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
-		64C90FB12B7FA9FF00AEF950 /* client */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = client; path = ../client; sourceTree = "<group>"; };
 		64CE03E22B17C370009608A4 /* Nautik Helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nautik Helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CE03E52B17C370009608A4 /* NautikHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NautikHelper.swift; sourceTree = "<group>"; };
 		64CE03E72B17C370009608A4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -62,7 +61,6 @@
 		64CE03D92B17C370009608A4 = {
 			isa = PBXGroup;
 			children = (
-				64C90FB12B7FA9FF00AEF950 /* client */,
 				64CE03F62B193A14009608A4 /* README.md */,
 				64CE03F42B18EA05009608A4 /* LICENSE */,
 				6476E2DF2EA626CE00DF53C1 /* AppIcon.icon */,
@@ -415,24 +413,24 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mxcl/AppUpdater";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
+				kind = exactVersion;
+				version = 1.1.1;
 			};
 		};
 		64CE03F72B1CEB88009608A4 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 4.2.0;
+				kind = exactVersion;
+				version = 4.2.2;
 			};
 		};
 		64CE03FA2B1CEBD0009608A4 /* XCRemoteSwiftPackageReference "client" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/swiftkube/client";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.17.0;
+				kind = exactVersion;
+				version = 0.25.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
