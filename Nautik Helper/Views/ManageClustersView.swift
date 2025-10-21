@@ -85,7 +85,23 @@ struct ManageClustersView: View {
                     }
                     .contextMenu(forSelectionType: URL.self) { localSelection in
                         Button(action: {
-                            state.kubeConfigs = state.kubeConfigs.filter { !localSelection.contains($0.path) }
+                            Task {
+                                // Remove all clusters from that kubeconfig from the keychain when removing it.
+                                for kubeConfigToRemove in state.kubeConfigs.filter({ localSelection.contains($0.path) }) {
+                                    guard case let .ok(kubeConfigToRemove) = kubeConfigToRemove else { continue }
+                                    for cluster in kubeConfigToRemove.clusters {
+                                        if state.clusters.contains(where: {
+                                            $0.kubeConfigPath == kubeConfigToRemove.path &&
+                                            $0.kubeConfigContextName == cluster.context.name
+                                        }) {
+                                            try? await state.removeCluster(path: kubeConfigToRemove.path, name: cluster.context.name)
+                                        }
+                                    }
+                                }
+                                
+                                // Remove the kubeconfig file itself.
+                                state.kubeConfigs = state.kubeConfigs.filter { !localSelection.contains($0.path) }
+                            }
                         }) {
                             Text("Remove File\(localSelection.count > 1 ? "s" : "") From App")
                         }
