@@ -20,7 +20,7 @@ To allow to be run on multiple Macs and user accounts in parallel without interf
 
 ## Installation
 
-Head to the [latest release](https://github.com/nautik-io/helper/releases/latest) page and grab the latest app build from the attachment named `helper-<version>.zip`. The `.zip` file contains an `.app` bundle that has the hardened runtime enabled and is notarized with Apple, so it can be securely opened without bypassing macOS Gatekeeper. We're currently doing the notarization on our dev machines; transparent CI automation for it will follow as soon as GitHub supports macOS 14 action runners.
+Head to the [latest release](https://github.com/nautik-io/helper/releases/latest) page and grab the latest app build from the attachment named `helper-<version>.zip`. The `.zip` file contains an `.app` bundle that has the hardened runtime enabled and is notarized with Apple, so it can be securely opened without bypassing macOS Gatekeeper.
 
 ## Updates
 
